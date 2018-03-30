@@ -1,0 +1,22 @@
+version: '2' # specify docker-compose version
+
+# Define the services/containers to be run
+services:
+  backend: # name of the first service
+    build: . # specify the directory of the Dockerfile
+    volumes:
+      - .:/usr/src/app/:rw
+      - /var/www/app/node_modules
+    ports:
+      - "3000:3000" # specify port forewarding
+    restart: always
+    links:
+      - database
+
+  database: # name of the third service
+    build: db
+    ports:
+      - "27017:27017" # specify port forewarding
+    command: '--smallfiles --logpath=/dev/null'
+    volumes:
+      - ./data/mongo:/data/db
